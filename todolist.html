@@ -3,84 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #28a745;
+        }
+
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #addForm {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #item {
+            padding: 8px;
+            width: 300px;
+            margin-right: 10px;
+        }
+
+        #submit {
+            padding: 8px 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .list-group-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete,
+        .edit {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .delete {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            margin-left: 10px;
+        }
+
+        .edit {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+        }
+
+        #lblsuccess {
+            text-align: center;
+            color: #28a745;
+        }
+    </style>
 </head>
 <body>
-    <a href="index.html" class="btn btn-primary">Back to Home</a>
-    <h1 style="text-align: center;" class="">todolist</h1>
+    <div class="navbar">
+        <a href="../index.html">Home</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+    </div>
+
+    <h1>To-Do List</h1>
+    <form id="addForm">
+        <input type="text" id="item" placeholder="Enter task...">
+        <input type="submit" id="submit" value="Submit">
+    </form>
     
-    <section class="vh-100" style="background-color: #eee;">
-        <div class="container py-5 h-100">
-          <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col col-lg-9 col-xl-7">
-              <div class="card rounded-3">
-                <div class="card-body p-4">
-      
-                  <h4 class="text-center my-3 pb-3">To Do App</h4>
-      
-                  <form class="row row-cols-lg-auto g-3 justify-content-center align-items-center mb-4 pb-2">
-                    <div class="col-12">
-                      <div class="form-outline">
-                        <input type="text" id="form1" class="form-control" />
-                        <label class="form-label" for="form1">Enter a task here</label>
-                      </div>
-                    </div>
-      
-                    <div class="col-12">
-                      <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-      
-                    <div class="col-12">
-                      <button type="submit" class="btn btn-warning">Get tasks</button>
-                    </div>
-                  </form>
-      
-                  <table class="table mb-4">
-                    <thead>
-                      <tr>
-                        <th scope="col">No.</th>
-                        <th scope="col">Todo item</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row">1</th>
-                        <td>NEVER GET LATE</td>
-                        <td>In progress</td>
-                        <td>
-                          <button type="submit" class="btn btn-danger">Delete</button>
-                          <button type="submit" class="btn btn-success ms-1">Finished</button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th scope="row">2</th>
-                        <td>DO HOMEWORK</td>
-                        <td>In progress</td>
-                        <td>
-                          <button type="submit" class="btn btn-danger">Delete</button>
-                          <button type="submit" class="btn btn-success ms-1">Finished</button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th scope="row">3</th>
-                        <td>STUDY FOR EXAM</td>
-                        <td>In progress</td>
-                        <td>
-                          <button type="submit" class="btn btn-danger">Delete</button>
-                          <button type="submit" class="btn btn-success ms-1">Finished</button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-      
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    <ul id="items" class="list-group"></ul>
+
+    <p id="lblsuccess" style="display:none;"></p>
+
+    <script>
+        window.onload = () => {
+            const form1 = document.querySelector("#addForm");
+            let items = document.getElementById("items");
+            let submit = document.getElementById("submit");
+            let editItem = null;
+
+            form1.addEventListener("submit", addItem);
+            items.addEventListener("click", removeItem);
+        };
+
+        function addItem(e) {
+            e.preventDefault();
+
+            if (submit.value != "Submit") {
+                console.log("Hello");
+
+                editItem.target.parentNode.childNodes[0].data
+                    = document.getElementById("item").value;
+
+                submit.value = "Submit";
+                document.getElementById("item").value = "";
+
+                document.getElementById("lblsuccess").innerHTML
+                    = "Text edited successfully";
+
+                document.getElementById("lblsuccess")
+                            .style.display = "block";
+
+                setTimeout(function() {
+                    document.getElementById("lblsuccess")
+                                    .style.display = "none";
+                }, 3000);
+
+                return false;
+            }
+
+            let newItem = document.getElementById("item").value;
+            if (newItem.trim() == "" || newItem.trim() == null)
+                return false;
+            else
+                document.getElementById("item").value = "";
+
+            let li = document.createElement("li");
+            li.className = "list-group-item";
+
+            let deleteButton = document.createElement("button");
+            deleteButton.className = "btn-danger btn btn-sm float-right delete";
+            deleteButton.appendChild(document.createTextNode("Delete"));
+
+            let editButton = document.createElement("button");
+            editButton.className = "btn-success btn btn-sm float-right edit";
+            editButton.appendChild(document.createTextNode("Edit"));
+
+            li.appendChild(document.createTextNode(newItem));
+            li.appendChild(deleteButton);
+            li.appendChild(editButton);
+
+            items.appendChild(li);
+        }
+
+        function removeItem(e) {
+            e.preventDefault();
+            if (e.target.classList.contains("delete")) {
+                if (confirm("Are you Sure?")) {
+                    let li = e.target.parentNode;
+                    items.removeChild(li);
+                    document.getElementById("lblsuccess").innerHTML
+                        = "Text deleted successfully";
+
+                    document.getElementById("lblsuccess")
+                                .style.display = "block";
+
+                    setTimeout(function() {
+                        document.getElementById("lblsuccess")
+                                .style.display = "none";
+                    }, 3000);
+                }
+            }
+            if (e.target.classList.contains("edit")) {
+                document.getElementById("item").value =
+                    e.target.parentNode.childNodes[0].data;
+                submit.value = "EDIT";
+                editItem = e;
+            }
+        }
+
+        function toggleButton(ref, btnID) {
+            document.getElementById(btnID).disabled = false;
+        }
+    </script>
 </body>
 </html>
